@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//org.mybatis/DTD mapper 3.0//EN"
+        "http://org.mybatis/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lubo.dao.VbillMapper">
+    <sql id="total">
+        b.id as id,p.id as pid,billCode,productName,proName,totalPrice,isPayment,b.creationDate as bcreationDate
+    </sql>
+    <sql id="tables">
+        smbms_bill b,smbms_provider p
+    </sql>
+    <select id="findAll" resultMap="vbillmapper">
+        select b.id as id,p.id as pid,billCode,productName,proName,totalPrice,isPayment,b.creationDate as bcreationDate from smbms_bill b,smbms_provider p where b.providerId=p.id
+    </select>
+    <select id="findAllByPage" resultMap="vbillmapper">
+        select <include refid="total"></include>
+        from <include refid="tables"></include>
+        where b.providerId=p.id
+        limit #{item},6
+    </select>
+    <select id="findBySome" resultMap="vbillmapper">
+        select <include refid="total"></include>
+        from <include refid="tables"></include>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="1==1">
+                and b.providerId=p.id
+            </if>
+            <if test="productName!=null">
+                and b.productName like Concat('%',#{productName},'%')
+            </if>
+            <if test="providerId!=0">
+                and p.id=#{providerId}
+            </if>
+            <if test="isPayment!=0">
+                and ispayment=#{isPayment}
+            </if>
+        </trim>
+    </select>
+    <select id="findByPage" resultMap="vbillmapper">
+        select <include refid="total"></include>
+        from smbms_bill b,smbms_provider p
+        <trim prefix="where" prefixOverrides="and">
+            <if test="1==1">
+                and b.providerId=p.id
+            </if>
+            <if test="productName!=null">
+                and b.productName like Concat('%',#{productName},'%')
+            </if>
+            <if test="providerId!=0">
+                and p.id=#{providerId}
+            </if>
+            <if test="isPayment!=0">
+                and ispayment=#{isPayment}
+            </if>
+        </trim>
+        limit #{item},6
+    </select>
+    <select id="findById" resultMap="vbillmapper">
+        select <include refid="total"></include>
+        from <include refid="tables"/>
+        where b.id=#{bid}
+    </select>
+    <resultMap id="vbillmapper" type="com.lubo.vo.Vbill">
+        <id property="id" column="id"/>
+        <result property="billCode" column="billCode"/>
+        <result property="productName" column="productName"/>
+        <result property="totalPrice" column="totalPrice"/>
+        <result property="isPayment" column="isPayment"/>
+        <result property="creationDate" column="bcreationDate"/>
+        <association property="provider" javaType="Provider">
+            <id property="id" column="pid"/>
+            <result property="proName" column="proName"/>
+        </association>
+    </resultMap>
+</mapper>
