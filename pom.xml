@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <spring-vesion>4.2.4.RELEASE</spring-vesion>
+    <spring-vesion>4.2.7.RELEASE</spring-vesion>
   </properties>
 
   <dependencies>
